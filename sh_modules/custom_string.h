@@ -41,4 +41,15 @@ char *custom_strdup(const char *str);
  */
 char *custom_strcat(const char *str1, const char *str2);
 
+/**
+ * custom_strncmp - Compare at most n characters of two strings
+ * @str1: The first string to compare
+ * @str2: The second string to compare
+ * @n: The maximum number of characters to compare
+ *
+ * Return: 0 if the strings are equal, a negative value if str1 is less than
+ * str2, or a positive value if str1 is greater than str2
+ */
+int custom_strncmp(const char *str1, const char *str2, size_t n);
+
 #endif /* CUSTOM_STRING_H */

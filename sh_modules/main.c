@@ -58,6 +58,7 @@ int path_exists(const char* path) {
 
 int main()
 {
+
     char *input = NULL;
     size_t bufsize = 0;
     ssize_t characters;
@@ -75,6 +76,7 @@ int i = 0;
 
         /* Read user input */
         characters = getline(&input, &bufsize, stdin);
+
 
         /* Check for end of file (Ctrl+D) */
         if (characters == -1) {
@@ -194,6 +196,6 @@ command_path = resolve_command_path(command);
             free(command_path);
         }
     }
-free(input);
+    free(input);
     return 0;
 }

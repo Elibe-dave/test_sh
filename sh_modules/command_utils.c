@@ -20,31 +20,33 @@ int is_empty_input(const char *input)
 
 char *resolve_command_path(const char *command)
 {
-    char *path = getenv("PATH");
-    char *path_copy = custom_strdup(path);
-    char *token = strtok(path_copy, ":");
-    char *command_path = custom_strcat(token, "/");
-char *temp_path = custom_strcat(command_path, command);
+/*    char *path = getenv("PATH"); */
+char *path = custom_getenv("PATH");
+    char *path_copy;
+    char *token;
+    char *command_path;
+char *temp_path;
 
+  
+   if (path == NULL) {
+   perror("getenv");
+   return NULL;
+   }
+ 
 
-    if (path == NULL) {
-        perror("getenv");
-        return NULL;
-    }
-
-/*    char *path_copy = custom_strdup(path); */
+path_copy = custom_strdup(path);
     if (path_copy == NULL) {
         return NULL;
     }
 
-    /* char *token = strtok(path_copy, ":"); */
+   token = strtok(path_copy, ":");
     while (token != NULL) {
-    /* char *command_path = custom_strcat(token, "/"); */
+  command_path = custom_strcat(token, "/");
         if (command_path == NULL) {
             free(path_copy);
             return NULL;
         }
-      /* char *temp_path = custom_strcat(command_path, command); */
+      temp_path = custom_strcat(command_path, command);
         free(command_path);
         if (temp_path == NULL) {
             free(path_copy);
