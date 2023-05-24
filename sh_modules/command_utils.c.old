@@ -1,0 +1,139 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/wait.h>
+#include "custom_string.h"
+#include "command_utils.h"
+
+/**
+* is_empty_input - Check if the input string is empty.
+* @input: The input string.
+*
+* Return: 1 if the input is empty, 0 otherwise.
+**/
+
+int is_empty_input(const char *input)
+{
+while (*input != '\0')
+{
+if (*input != ' ' && *input != '\t')
+{
+return (0); /* Not empty */
+}
+input++;
+}
+return (1); /* Empty */
+}
+
+
+/**
+* resolve_command_path - Resolve the full path of a command.
+* @command: The command to resolve.
+*
+* Return: A pointer to the resolved command path on success
+* or NULL on failure.
+**/
+
+char *resolve_command_path(const char *command)
+{
+char *path_copy;
+char *path;
+char *resolved_path;
+
+path = custom_getenv("PATH");
+if (path == NULL)
+{
+perror("getenv");
+return (NULL);
+}
+
+path_copy = custom_strdup(path);
+if (path_copy == NULL)
+{
+return (NULL);
+}
+
+resolved_path = search_command_path(command, path_copy);
+
+free(path_copy);
+return (resolved_path);
+}
+
+/**
+* search_command_path - searches for full path of a command.
+* @command: The command to resolve.
+* @path: The path
+*
+* Return: A pointer to the resolved command path on success
+* or NULL on failure.
+**/
+
+char *search_command_path(const char *command, const char *path)
+{
+char *command_path;
+char *token;
+char *path_copy;
+
+path_copy = custom_strdup(path);
+if (path_copy == NULL)
+{
+return (NULL);
+}
+
+token = strtok(path_copy, ":");
+while (token != NULL)
+{
+command_path = create_command_path(token, command);
+if (command_path == NULL)
+{
+free(path_copy);
+return (NULL);
+}
+
+if (access(command_path, X_OK) == 0)
+{
+free(path_copy);
+return (command_path);
+}
+
+free(command_path);
+token = strtok(NULL, ":");
+}
+
+free(path_copy);
+return (NULL);
+}
+
+/**
+* create_command_path - create the full path of a command.
+* @command: The command to resolve.
+* @directory: The directory
+* Return: A pointer to the created command path on success
+* or NULL on failure.
+**/
+
+char *create_command_path(const char *directory, const char *command)
+{
+char *command_path;
+size_t directory_len;
+size_t command_len;
+size_t path_len;
+
+directory_len = custom_strlen(directory);
+command_len = custom_strlen(command);
+path_len = directory_len + command_len + 2;
+/* +2 for '/' and null terminator */
+
+command_path = custom_malloc(path_len);
+if (command_path == NULL)
+{
+return (NULL);
+}
+
+custom_strncpy(command_path, directory, directory_len);
+command_path[directory_len] = '/';
+custom_strncpy(command_path + directory_len + 1, command, command_len + 1);
+
+return (command_path);
+}

@@ -21,11 +21,30 @@ int is_empty_input(const char *input);
 char *resolve_command_path(const char *command);
 
 /**
+ * search_command_path - Search for the full path of a command.
+ * @command: The command to resolve.
+ * @path: The path
+ * Return: A pointer to the resolved command path on success
+ * or NULL on failure.
+ */
+char *search_command_path(const char *command, const char *path);
+
+/**
  * custom_getenv - Retrieves the value of the specified environment variable.
  *
  * @name: The name of the environment variable.
  * Return: The value of the environment variable if found, NULL otherwise.
  */
 char *custom_getenv(const char *name);
+
+/**
+ * create_command_path - Full path of a command.
+ * @command: The command to resolve.
+ * @directory: The directory
+ *
+ * Return: A pointer to the resolved command path on success
+ * or NULL on failure.
+ **/
+char *create_command_path(const char *directory, const char *command);
 
 #endif /* COMMAND_UTILS_H */
