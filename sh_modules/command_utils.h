@@ -47,4 +47,15 @@ char *custom_getenv(const char *name);
  **/
 char *create_command_path(const char *directory, const char *command);
 
+/**
+ * build_command_path - Build the command path by
+ * concatenating directory and command.
+ * @directory: The directory to concatenate.
+ * @command: The command to concatenate.
+ *
+ * Return: A pointer to the concatenated command path on success
+ * or NULL on failure.
+ **/
+char *build_command_path(const char *directory, const char *command);
+
 #endif /* COMMAND_UTILS_H */
