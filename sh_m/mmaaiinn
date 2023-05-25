@@ -1,0 +1,144 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include "command_utils.h"
+#include "custom_string.h"
+#include <string.h>
+
+#define MAX_ARGS 10
+
+int compareStrings(const char *str1, const char *str2) {
+    while (*str1 && *str2) {
+        if (*str1 != *str2)
+            return (*str1 - *str2);
+
+        str1++;
+        str2++;
+    }
+    return (*str1 - *str2);
+}
+
+size_t calculateLength(const char *str) {
+    size_t length = 0;
+    while (*str) {
+        length++;
+        str++;
+    }
+    return (length);
+}
+
+int command_exists(const char *command) {
+    char *command_path = resolve_command_path(command);
+    if (command_path == NULL)
+        return 0;
+
+    free(command_path);
+    return 1;
+}
+
+int path_exists(const char *path) {
+    if (access(path, F_OK) != -1)
+        return 1;
+    else
+        return 0;
+}
+
+void handle_exit() {
+    // Clean up resources and exit the shell
+    // (optional code here)
+}
+
+void handle_env() {
+    // Print environment variables
+    for (int i = 0; environ[i] != NULL; i++) {
+        write(STDOUT_FILENO, environ[i], calculateLength(environ[i]));
+        write(STDOUT_FILENO, "\n", 1);
+    }
+}
+
+void execute_command(const char *command, char *args[]) {
+    char *command_path = resolve_command_path(command);
+    if (command_path == NULL) {
+        perror("Command");
+        return;
+    }
+
+    pid_t pid = fork();
+    if (pid == -1) {
+        perror("fork");
+        free(command_path);
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        execve(command_path, args, NULL);
+        perror("execve");
+        free(command_path);
+        exit(EXIT_FAILURE);
+    } else {
+        int status;
+        waitpid(pid, &status, 0);
+        free(command_path);
+    }
+}
+
+void process_input(const char *input) {
+    char *args[MAX_ARGS + 2];
+    int i = 0;
+
+    args[i] = strtok(input, " \t");
+    while (args[i] != NULL && i < MAX_ARGS)
+        args[++i] = strtok(NULL, " \t");
+    args[i] = NULL;
+
+    if (args[0][0] == '/' && !path_exists(args[0])) {
+        perror("Absolute path");
+        return;
+    }
+
+    if (args[0][0] == '/') {
+        execute_command(args[0], args);
+    } else if (command_exists(args[0])) {
+        execute_command(args[0], args);
+    } else {
+        perror("Command");
+    }
+}
+
+int main(void) {
+    char *input = NULL;
+    size_t bufsize = 0;
+    ssize_t characters;
+
+    while (1) {
+        write(STDOUT_FILENO, ":) ", 3);
+        characters = getline(&input, &bufsize, stdin);
+
+        if (characters == -1) {
+            if (input)
+                free(input);
+            break;
+        }
+
+        if (input[characters - 1] == '\n')
+            input[characters - 1] = '\0';
+
+        if (is_empty_input(input))
+            continue;
+
+        if (compareStrings(input, "exit") == 0) {
+            handle_exit();
+            break;
+        }
+
+        if (compareStrings(input, "env") == 0) {
+            handle_env();
+            continue;
+        }
+
+        process_input(input);
+    }
+
+    free(input);
+    return 0;
+}
+
