@@ -151,7 +151,7 @@ int compareStrings(const char *str1, const char *str2);
 void display_prompt_read_input(char **input, size_t *bufsize);
 
 
-void print_environment_variables();
+void print_environment_variables(void);
 
 void check_and_execute_absolute_path(char *command, char *args[]);
 

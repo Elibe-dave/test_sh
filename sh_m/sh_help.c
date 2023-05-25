@@ -7,7 +7,18 @@
 #include <string.h>
 
 #define MAX_ARGS 10 /* Maximum number of arguments for the command */
-
+/**
+ * display_prompt_read_input - Display prompt and read user input.
+ * @input: Pointer to the input string.
+ * @bufsize: Pointer to the size of the buffer.
+ *
+ * This function displays the prompt ":)" and
+ * reads the user input from stdin
+ * into the buffer pointed by @input with the size @bufsize.
+ * It checks for the end of file (Ctrl+D) and
+ * handles freeing the input buffer
+ * in case of an error or end of file.
+ */
 void display_prompt_read_input(char **input, size_t *bufsize)
 {
 ssize_t characters;
@@ -31,7 +42,15 @@ if ((*input)[characters - 1] == '\n')
 (*input)[characters - 1] = '\0';
 }
 
-void print_environment_variables()
+/**
+ * print_environment_variables - Print environment variables.
+ *
+ * This function prints the environment variables
+ * to the standard output.
+ * It retrieves the environment variables from
+ * the `environ` array.
+ */
+void print_environment_variables(void)
 {
 int i;
 /* Print environment variables */
