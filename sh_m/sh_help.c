@@ -8,7 +8,7 @@
 
 #define MAX_ARGS 10 /* Maximum number of arguments for the command */
 /**
- * display_prompt_read_input - Display prompt and read user input.
+ * read_input - read user input.
  * @input: Pointer to the input string.
  * @bufsize: Pointer to the size of the buffer.
  *
@@ -19,12 +19,9 @@
  * handles freeing the input buffer
  * in case of an error or end of file.
  */
-void display_prompt_read_input(char **input, size_t *bufsize)
+void read_input(char **input, size_t *bufsize)
 {
 ssize_t characters;
-
-/* Display prompt */
-write(STDOUT_FILENO, ":) ", 3);
 
 /* Read user input */
 characters = getline(input, bufsize, stdin);
@@ -34,7 +31,10 @@ if (characters == -1)
 {
 if (*input)
 free(*input);
-return;
+/* exit(EXIT_FAILURE); */
+/*write(STDOUT_FILENO, "\n", 1);*/
+exit(0);
+/* return; */
 }
 
 /* Remove newline character at the end, if present */
@@ -59,4 +59,13 @@ for (i = 0; environ[i] != NULL; i++)
 write(STDOUT_FILENO, environ[i], calculateLength(environ[i]));
 write(STDOUT_FILENO, "\n", 1);
 }
+}
+
+
+/**
+ * display_prompt - Display the prompt symbol.
+ */
+void display_prompt(void)
+{
+    write(STDOUT_FILENO, ":) ", 3);
 }

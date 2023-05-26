@@ -19,7 +19,8 @@ size_t custom_strlen(const char *str);
  * @str1: The first string.
  * @str2: The second string.
  *
- * Return: An integer less than, equal to, or greater than zero if str1 is found,
+ * Return: An integer less than, equal to
+ * or greater than zero if str1 is found,
  * respectively, to be less than, to match, or be greater than str2.
  */
 int custom_strcmp(const char *str1, const char *str2);
@@ -37,7 +38,8 @@ char *custom_strdup(const char *str);
  * @str1: The first string.
  * @str2: The second string.
  *
- * Return: A pointer to the newly allocated string containing the concatenated strings.
+ * Return: A pointer to the newly allocated string
+ * containing the concatenated strings.
  */
 char *custom_strcat(const char *str1, const char *str2);
 
@@ -51,5 +53,12 @@ char *custom_strcat(const char *str1, const char *str2);
  * str2, or a positive value if str1 is greater than str2
  */
 int custom_strncmp(const char *str1, const char *str2, size_t n);
+
+void execute_interactive_mode(void);
+
+
+void run_non_interactive_mode(const char *filename);
+
+int execute_command(char *command, char **args);
 
 #endif /* CUSTOM_STRING_H */

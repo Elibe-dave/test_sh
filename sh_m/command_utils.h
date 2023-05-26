@@ -107,7 +107,8 @@ void parse_input(char *input, char *args[]);
  * @args: The array of arguments for the command.
  * Return: 0 on success, 1 on failure.
  */
-void execute_command(const char *command, char *args[]);
+
+/*void execute_command(const char *command, char *args[]); */
 /* int execute_command(const char *command, char **args); */
 
 /**
@@ -148,11 +149,14 @@ size_t calculateLength(const char *str);
 int compareStrings(const char *str1, const char *str2);
 
 
-void display_prompt_read_input(char **input, size_t *bufsize);
+void read_input(char **input, size_t *bufsize);
 
 
 void print_environment_variables(void);
 
 void check_and_execute_absolute_path(char *command, char *args[]);
+
+void display_prompt(void);
+
 
 #endif /* COMMAND_UTILS_H */
